@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stock Material</title>
+
+<style>
+  body { font-family: Arial, sans-serif; text-align:center; padding:20px; }
+  h1 { margin-bottom:20px; font-size:24px; }
+  button {
+    width:100%; padding:18px; font-size:18px;
+    margin:10px 0; border:none; border-radius:8px;
+    cursor:pointer;
+  }
+  .sin-stock { background:#d9534f; color:white; }
+  .poco-stock { background:#f0ad4e; color:white; }
+  input {
+    width:100%; padding:12px; font-size:16px; text-align:center;
+  }
+  #msg { margin-top:15px; font-weight:bold; }
+</style>
+
+</head>
+<body>
+
+<h1 id="material-title">Material no identificado</h1>
+
+<button class="sin-stock" onclick="enviar('SIN STOCK', 0)">
+  🚨 SIN STOCK
+</button>
+
+<input type="number" id="cantidad" placeholder="Cantidad disponible">
+
+<button class="poco-stock" onclick="enviar('POCO STOCK', document.getElementById('cantidad').value)">
+  ⚠️ POCO STOCK
+</button>
+
+<p id="msg"></p>
+
+<script>
+  // 🧠 Leer material desde la URL
+  const params = new URLSearchParams(window.location.search);
+  const material = params.get("material") || "";
+  document.getElementById("material-title").innerText = material || "Material no identificado";
+
+  // 📩 Ajustá esta parte con tu Form
+  const FORM_URL =
+    "https://docs.google.com/forms/d/e/1FAIpQLSdvvyZy8DPPBssML6_LGJLXUpKL58icIbzOb4LDR2PQrYUBlg/formResponse";
+
+  const ENTRY_MATERIAL = "entry.1737009670";
+  const ENTRY_ESTADO   = "entry.1416497766";
+  const ENTRY_CANTIDAD = "entry.794276494";
+
+  function enviar(estado, cantidad) {
+    if (!material) {
+      alert("Material no identificado");
+      return;
+    }
+    if (estado === "POCO STOCK" && !cantidad) {
+      alert("Ingresá la cantidad disponible");
+      return;
+    }
+
+    const data = new FormData();
+    data.append(ENTRY_MATERIAL, material);
+    data.append(ENTRY_ESTADO, estado);
+    data.append(ENTRY_CANTIDAD, cantidad);
+
+    fetch(FORM_URL, { method:"POST", mode:"no-cors", body:data });
+
+    document.getElementById("msg").innerText = "✔️ Aviso enviado";
+  }
+</script>
+
+</body>
+</html>
