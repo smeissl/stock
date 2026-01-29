@@ -81,7 +81,7 @@
 
 <script>
   // 🔑 PIN correcto
-  const PIN_CORRECTO = "1812"; // Cambialo por el que quieras
+  const PIN_CORRECTO = "1812"; // <-- Cambiá por el PIN que quieras
 
   function verificarPIN() {
     const pinIngresado = document.getElementById("pinInput").value;
@@ -102,10 +102,12 @@
 
   // 🔹 Reemplazos para mostrarlo limpio
   material = material
-    .replace(/_X_/g, " x ")        // "_X_" por " x "
-    .replace(/_/g, " ")            // "_" por espacio
-    .replace(/\s+-\s+/g, " - ")    // asegura espacio alrededor del guion
-    .replace(/KGS/i, "Kgs");       // ajusta unidad
+    .replace(/_X_/g, " x ")             // "_X_" por " x "
+    .replace(/(\d+)_(\d+)/g, "$1.$2")   // números con "_" → decimal
+    .replace(/_/g, " ")                  // otros "_" por espacio
+    .replace(/\s+-\s+/g, " - ")          // espacio alrededor de guiones
+    .replace(/KGS/i, "Kgs");             // unidad
+    // las comas ya se mantienen tal cual
 
   document.getElementById("material-title").innerText = material || "Material no identificado";
 
@@ -140,4 +142,3 @@
 
 </body>
 </html>
-
