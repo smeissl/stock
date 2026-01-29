@@ -96,9 +96,17 @@
     }
   }
 
-  // 🧠 Leer material desde la URL
+  // 🧠 Leer material desde la URL y limpiar formato
   const params = new URLSearchParams(window.location.search);
-  const material = params.get("material") || "";
+  let material = params.get("material") || "";
+
+  // 🔹 Reemplazos para mostrarlo limpio
+  material = material
+    .replace(/_X_/g, " x ")        // "_X_" por " x "
+    .replace(/_/g, " ")            // "_" por espacio
+    .replace(/\s+-\s+/g, " - ")    // asegura espacio alrededor del guion
+    .replace(/KGS/i, "Kgs");       // ajusta unidad
+
   document.getElementById("material-title").innerText = material || "Material no identificado";
 
   // 📩 Ajustá esta parte con tu Form
