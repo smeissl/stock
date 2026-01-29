@@ -7,38 +7,95 @@
 
 <style>
   body { font-family: Arial, sans-serif; text-align:center; padding:20px; }
+
   h1 { margin-bottom:20px; font-size:24px; }
+
   button {
     width:100%; padding:18px; font-size:18px;
     margin:10px 0; border:none; border-radius:8px;
     cursor:pointer;
   }
+
   .sin-stock { background:#d9534f; color:white; }
   .poco-stock { background:#f0ad4e; color:white; }
+
   input {
     width:100%; padding:12px; font-size:16px; text-align:center;
   }
+
   #msg { margin-top:15px; font-weight:bold; }
+
+  /* Estilos del overlay de PIN */
+  #pin-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width:100%;
+    height:100%;
+    background: rgba(0,0,0,0.8);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction: column;
+    color:white;
+    z-index: 1000;
+  }
+
+  #pin-overlay input {
+    max-width:200px;
+    margin-bottom:10px;
+  }
+
+  #pin-overlay button {
+    width: auto;
+  }
 </style>
 
 </head>
 <body>
 
-<h1 id="material-title">Material no identificado</h1>
+<!-- Overlay de PIN -->
+<div id="pin-overlay">
+  <h2>Ingrese el PIN para acceder</h2>
+  <input type="password" id="pinInput" placeholder="PIN">
+  <button onclick="verificarPIN()">Ingresar</button>
+  <p id="pin-msg" style="color:red; margin-top:10px;"></p>
+</div>
 
-<button class="sin-stock" onclick="enviar('SIN STOCK', 0)">
-  🚨 SIN STOCK
-</button>
+<!-- Contenido principal -->
+<div id="contenido" style="display:none;">
+  <h1 id="material-title">Material no identificado</h1>
 
-<input type="number" id="cantidad" placeholder="Cantidad disponible">
+  <button class="sin-stock" onclick="enviar('SIN STOCK', 0)">
+    🚨 SIN STOCK
+  </button>
 
-<button class="poco-stock" onclick="enviar('POCO STOCK', document.getElementById('cantidad').value)">
-  ⚠️ POCO STOCK
-</button>
+  <input type="number" id="cantidad" placeholder="Cantidad disponible">
 
-<p id="msg"></p>
+  <button class="poco-stock" onclick="enviar('POCO STOCK', document.getElementById('cantidad').value)">
+    ⚠️ POCO STOCK
+  </button>
+
+  <p id="msg"></p>
+</div>
 
 <script>
+  // 🔑 PIN correcto
+  const PIN_CORRECTO = "1812"; // Cambialo por el que quieras
+
+  function verificarPIN() {
+    const pinIngresado = document.getElementById("pinInput").value;
+    const mensaje = document.getElementById("pin-msg");
+
+    if(pinIngresado === PIN_CORRECTO){
+      document.getElementById("pin-overlay").style.display = "none";
+      document.getElementById("contenido").style.display = "block";
+    } else {
+      mensaje.textContent = "PIN incorrecto. Intenta nuevamente.";
+      document.getElementById("pinInput").value = "";
+    }
+  }
+
   // 🧠 Leer material desde la URL
   const params = new URLSearchParams(window.location.search);
   const material = params.get("material") || "";
@@ -75,3 +132,4 @@
 
 </body>
 </html>
+
